@@ -10,6 +10,7 @@ function getStartTime(schedules, duration) {
       markBusy(minutes, block)
     }
   }
+  //printMinutesArray(minutes)
   return findFree(minutes, duration)
 }
 
@@ -17,12 +18,12 @@ function findFree(minutesArray, duration) {
   let len = minutesArray.length
   
   for (let i = 0, free = 0; i < len; i++) {
-    if (minutesArray[i++] === FREE) /*global FREE*/
+    if (minutesArray[i] === FREE) /*global FREE*/
       free++
     else
       free = 0
     if (free === duration) 
-      return timeString(i-duration)
+      return timeString(i-duration+1)
   }
   return null
 }
@@ -43,10 +44,19 @@ function minuteIndex(timestring) {
 }
 
 function timeString(minuteIndex) {
-  const hour = Math.floor(minuteIndex / 60) + DAY_START
+  const hour = Math.floor(minuteIndex / 60) + DAY_START/60
   const minute = minuteIndex % 60
   return `${hour < 10 ? '0'+hour: hour}:${minute < 10 ? '0'+minute : minute}`
 }
+
+function printMinutesArray(minutesArray) {
+  for (let i = 0, len = minutesArray.length; i < len; i+=60) {
+    console.log(`${timeString(i)}: ${minutesArray.slice(i,i+60).map(x=>x===BUSY?'X':'_').join('')}`)
+  }
+}
+
+console.log(`timeString(0) returns: ${timeString(0)}`)
+console.log(`minuteIndex('09:15') returns: ${minuteIndex('09:15')}`)
 
 var schedules = [
   [['09:00', '11:30'], ['13:30', '16:00'], ['16:00', '17:30'], ['17:45', '19:00']],
